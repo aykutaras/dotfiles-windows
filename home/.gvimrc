@@ -4,3 +4,6 @@ set guioptions-=r  "hide right-hand scrollbar
 set guioptions-=L  "hide left-hand scrollbar
 
 set guifont=Source\ Code\ Pro:h11
+set background=dark
+
+colorscheme solarized

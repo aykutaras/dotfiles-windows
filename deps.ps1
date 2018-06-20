@@ -42,19 +42,15 @@ choco install nuget.commandline   --limit-output
 choco install webpi               --limit-output
 choco install git.install         --limit-output -params '"/GitAndUnixToolsOnPath /NoShellIntegration"'
 choco install nvm.portable        --limit-output
-choco install ruby                --limit-output
 
 # browsers
 choco install GoogleChrome        --limit-output; <# pin; evergreen #> choco pin add --name GoogleChrome        --limit-output
-choco install GoogleChrome.Canary --limit-output; <# pin; evergreen #> choco pin add --name GoogleChrome.Canary --limit-output
-choco install Firefox             --limit-output; <# pin; evergreen #> choco pin add --name Firefox             --limit-output
-choco install Opera               --limit-output; <# pin; evergreen #> choco pin add --name Opera               --limit-output
 
 # dev tools and frameworks
-choco install atom                --limit-output; <# pin; evergreen #> choco pin add --name Atom                --limit-output
-choco install Fiddler4            --limit-output
 choco install vim                 --limit-output
 choco install winmerge            --limit-output
+choco install vscode              --limit-output
+choco install awscli              --limit-output
 
 Refresh-Environment
 
@@ -68,33 +64,11 @@ gem pristine --all --env-shebang
 
 ### Windows Features
 Write-Host "Installing Windows Features..." -ForegroundColor "Yellow"
-# IIS Base Configuration
-Enable-WindowsOptionalFeature -Online -All -FeatureName `
-    "IIS-BasicAuthentication", `
-    "IIS-DefaultDocument", `
-    "IIS-DirectoryBrowsing", `
-    "IIS-HttpCompressionDynamic", `
-    "IIS-HttpCompressionStatic", `
-    "IIS-HttpErrors", `
-    "IIS-HttpLogging", `
-    "IIS-ISAPIExtensions", `
-    "IIS-ISAPIFilter", `
-    "IIS-ManagementConsole", `
-    "IIS-RequestFiltering", `
-    "IIS-StaticContent", `
-    "IIS-WebSockets", `
-    "IIS-WindowsAuthentication" `
-    -NoRestart | Out-Null
-
 # ASP.NET Base Configuration
 Enable-WindowsOptionalFeature -Online -All -FeatureName `
     "NetFx3", `
     "NetFx4-AdvSrvs", `
     "NetFx4Extended-ASPNET45", `
-    "IIS-NetFxExtensibility", `
-    "IIS-NetFxExtensibility45", `
-    "IIS-ASPNET", `
-    "IIS-ASPNET45" `
     -NoRestart | Out-Null
 
 # Web Platform Installer for remaining Windows features
@@ -110,12 +84,27 @@ if (which npm) {
     npm install -g mocha
     npm install -g node-inspector
     npm install -g yo
+    npm install -g serverless
+    npm install -g typescript
+    npm install -g tslint
 }
 
-### Janus for vim
-Write-Host "Installing Janus..." -ForegroundColor "Yellow"
-if ((which curl) -and (which vim) -and (which rake) -and (which bash)) {
-    curl.exe -L https://bit.ly/janus-bootstrap | bash
+Write-Host "Installing vim plugins..." -ForegroundColor "Yellow"
+if ((which curl) -and (which vim) -and (which bash) -and (which git)) {
+    cp home/.vimrc ~/
+    cp home/.gvimrc ~/
+
+    mkdir -p ~/.vim/autoload
+    mkdir -p ~/.vim/bundle
+    curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
+
+    # Nerdtree
+    git clone https://github.com/scrooloose/nerdtree.git ~/.vim/bundle/nerdtree
+    git clone https://github.com/Xuyuanp/nerdtree-git-plugin.git ~/.vim/bundle/nerdtree-git-plugin
+    git clone https://github.com/chase/vim-ansible-yaml.git ~/.vim/bundle/vim-ansible-yaml
+    git clone https://github.com/altercation/vim-colors-solarized.git ~/.vim/bundle/vim-colors-solarized
+    git clone https://github.com/fatih/vim-go.git ~/.vim/bundle/vim-go
+    git clone https://github.com/othree/yajs.vim ~/.vim/bundle/yajs
 }
 
 
